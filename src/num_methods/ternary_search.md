@@ -16,17 +16,17 @@ The task is to find the maximum of function $f(x)$ on the interval $[l; r]$.
 
 Consider any 2 points $m_1$, and $m_2$ in this interval: $l < m_1 < m_2 < r$. We evaluate the function at $m_1$ and $m_2$, i.e. find the values of $f(m_1)$ and $f(m_2)$. Now, we get one of three options:
 
-- $f(m_1) < f(m_2)$
+-   $f(m_1) < f(m_2)$
 
-  The desired maximum can not be located on the left side of $m_1$, i.e. on the interval $[l; m_1]$, since either both points $m_1$ and $m_2$ or just $m_1$ belong to the area where the function increases. In either case, this means that we have to search for the maximum in the segment $[m_1, r]$.
+    The desired maximum can not be located on the left side of $m_1$, i.e. on the interval $[l; m_1]$, since either both points $m_1$ and $m_2$ or just $m_1$ belong to the area where the function increases. In either case, this means that we have to search for the maximum in the segment $[m_1, r]$.
 
-- $f(m_1) > f(m_2)$
+-   $f(m_1) > f(m_2)$
 
-  This situation is symmetrical to the previous one: the maximum can not be located on the right side of $m_2$, i.e. on the interval $[m_2; r]$, and the search space is reduced to the segment $[l; m_2]$.
+    This situation is symmetrical to the previous one: the maximum can not be located on the right side of $m_2$, i.e. on the interval $[m_2; r]$, and the search space is reduced to the segment $[l; m_2]$.
 
-- $f(m_1) = f(m_2)$
+-   $f(m_1) = f(m_2)$
 
-  We can see that either both of these points belong to the area where the value of the function is maximized, or $m_1$ is in the area of increasing values and $m_2$ is in the area of descending values (here we used the strictness of function increasing/decreasing). Thus, the search space is reduced to $[m_1; m_2]$. To simplify the code, this case can be combined with any of the previous cases.
+    We can see that either both of these points belong to the area where the value of the function is maximized, or $m_1$ is in the area of increasing values and $m_2$ is in the area of descending values (here we used the strictness of function increasing/decreasing). Thus, the search space is reduced to $[m_1; m_2]$. To simplify the code, this case can be combined with any of the previous cases.
 
 Thus, based on the comparison of the values in the two inner points, we can replace the current interval $[l; r]$ with a new, shorter interval $[l^\prime; r^\prime]$. Repeatedly applying the described procedure to the interval, we can get arbitrarily short interval. Eventually its length will be less than a certain pre-defined constant (accuracy), and the process can be stopped. This is a numerical method, so we can assume that after that the function reaches its maximum at all points of the last interval $[l; r]$. Without loss of generality, we can take $f(l)$ as the return value.
 
@@ -44,7 +44,7 @@ $$T(n) = T({2n}/{3}) + 1 = \Theta(\log n)$$
 
 It can be visualized as follows: every time after evaluating the function at points $m_1$ and $m_2$, we are essentially ignoring about one third of the interval, either the left or right one. Thus the size of the search space is ${2n}/{3}$ of the original one. 
 
-Applying [Master's Theorem](https://en.wikipedia.org/wiki/Master_theorem), we get the desired complexity estimate.
+Applying [Master's Theorem](https://en.wikipedia.org/wiki/Master_theorem_(analysis_of_algorithms)), we get the desired complexity estimate.
 
 ### The case of the integer arguments
 
@@ -80,3 +80,10 @@ Instead of the criterion `r - l > eps`, we can select a constant number of itera
 - [Hackerearth - Rescuer](https://www.hackerearth.com/september-circuits/algorithm/rescuer-1/)
 - [Spoj - Building Construction](http://www.spoj.com/problems/KOPC12A/)
 - [Codeforces - Weakness and Poorness](http://codeforces.com/problemset/problem/578/C)
+* [LOJ - Closest Distance](http://lightoj.com/volume_showproblem.php?problem=1146)
+* [GYM - Dome of Circus (D)](http://codeforces.com/gym/101309)
+* [UVA - Galactic Taxes](https://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=4898)
+* [GYM - Chasing the Cheetahs (A)](http://codeforces.com/gym/100829)
+* [UVA - 12197 - Trick or Treat](https://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=3349)
+* [SPOJ - Building Construction](http://www.spoj.com/problems/KOPC12A/)
+* [Codeforces - Devu and his Brother](https://codeforces.com/problemset/problem/439/D)

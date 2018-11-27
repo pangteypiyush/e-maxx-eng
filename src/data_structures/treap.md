@@ -1,7 +1,8 @@
+
 <!--?title Treap -->
 # Treap (Cartesian tree)
 
-Treap is a data structure which combines binary tree and binary heap (hence the name: tree + heap => Treap).
+Treap is a data structure which combines binary tree and binary heap (hence the name: tree + heap $\Rightarrow$ Treap).
 
 More specifically, treap is a data structure that stores pairs (X, Y) in a binary tree in such a way that it is a binary search tree by X and a binary heap by Y.
 Assuming that all X and all Y are different, we can see that if some node of the tree contains values ($X_0$, $Y_0$), all nodes in the left subtree have $X < X_0$, all nodes in the right subtree have $X > X_0$, and all nodes in both left and right subtrees have $Y < Y_0$.
@@ -19,24 +20,24 @@ At the same time, **priorities** allow to **uniquely** specify the tree that wil
 A treap provides the following operations:
 
 - **Insert(X,Y)** in $O(\log N)$.  
-  Adds a new node to the tree. A variant is possible in priority Y is not passed as as a parameter but is chosen randomly instead (while ensuring that it's different from all other priorities in the tree).
+  Adds a new node to the tree. One possible variant is to pass only X and generate Y randomly inside the operation (while ensuring that it's different from all other priorities in the tree).
 - **Search (X)** in $O(\log N)$.  
-  Looks for a node with the specified key value X. The implementation is the same as for an ordinary binary tree.
+  Looks for a node with the specified key value X. The implementation is the same as for an ordinary binary search tree.
 - **Erase (X)** in $O(\log N)$.  
   Looks for a node with the specified key value X and removes it from the tree.
 - **Build ($X_1$, ..., $X_N$)** in $O(N)$.  
-  Builds a tree from a list of values. This can be done in linear time (assuming that $X_1, ..., X_N$ are sorted), but we will not discuss this implementation here. We will use the simplest variant with serial calls of **Insert** operation, which has $O(N \log N)$ complexity.
+  Builds a tree from a list of values. This can be done in linear time (assuming that $X_1, ..., X_N$ are sorted), but we will not discuss this implementation here. We will just use $N$ serial calls of **Insert** operation, which has $O(N \log N)$ complexity.
 - **Union ($T_1$, $T_2$)** in $O(M \log (N/M))$.  
-  Merges two trees, assuming that all the elements are different. An implementation with the same asymptotic behavior is possible if duplicate elements should be removed during merge.
+  Merges two trees, assuming that all the elements are different. It is possible to achieve the same complexity if duplicate elements should be removed during merge.
 - **Intersect ($T_1$, $T_2$)** in $O(M \log (N/M))$.  
   Finds the intersection of two trees (i.e. their common elements). We will not consider the implementation of this operation here.
 
-In  addition, due to the fact that a treap is a binary search tree, it can implement other operations, such as finding the K-th largest element or finding the index of an element.
+In addition, due to the fact that a treap is a binary search tree, it can implement other operations, such as finding the K-th largest element or finding the index of an element.
 
 ## Implementation Description
 In terms of implementation, each node contains X, Y and pointers to the left (L) and right (R) children.
 
-To implement the required operations, we'll have to start with two auxiliary operations: Split and Merge.
+We will implement all the required operations using just two auxiliary operations: Split and Merge.
 
 **Split (T, X)** separates tree T in 2 subtrees L and R trees (which are the return values of split) so that L contains all elements with key $X_L < X$, and R contains all elements with key $X_R > X$. This operation has $O (\log N)$ complexity and is implemented using an obvious recursion.
 
@@ -52,7 +53,7 @@ We implement **Build** operation with $O (N \log N)$ complexity using $N$ **Inse
 
 ## Implementation
 
-```
+```cpp
 struct item {
 	int key, prior;
 	item * l, * r;
@@ -112,7 +113,7 @@ To extend the functionality of the treap, it is often necessary to store the num
 
 When a tree changes (nodes are added or removed etc.), `cnt` of some nodes should be updated accordingly. We'll create two functions: `cnt()` will return the current value of `cnt` or 0 if the node does not exist, and `upd_cnt()` will update the value of `cnt` for this node assuming that for its children L and R the values of `cnt` have already been updated. Evidently it's sufficient to add calls of `upd_cnt()` to the end of `insert`, `erase`, `split` and `merge` to keep `cnt` values up-to-date.
 
-```
+```cpp
 int cnt (pitem t) {
 	return t ? t->cnt : 0;
 }
@@ -125,7 +126,33 @@ void upd_cnt (pitem t) {
 
 ## Building a Treap in $O (N)$ in offline mode
 
-TODO
+Given a sorted list of keys, it is possible to construct a treap faster than by inserting the keys one at a time which takes $O(N \log N)$. Since the keys are sorted, a balanced binary search tree can be easily constructed in linear time. The heap values $Y$ are initialized randomly and then can be heapified independent of the keys $X$ to [build the heap](https://en.wikipedia.org/wiki/Binary_heap#Building_a_heap) in $O(N)$.
+
+```cpp
+void heapify (pitem t) {
+	if (!t) return;
+	pitem max = t;
+	if (t->l != NULL && t->l->prior > max->prior)
+		max = t->l;
+	if (t->r != NULL && t->r->prior > max->prior)
+		max = t->r;
+	if (max != t) {
+		swap (t->prior, max->prior);
+		heapify (max);
+	}
+}
+
+pitem build (int * a, int n) {
+	// Construct a treap on values {a[0], a[1], ..., a[n - 1]}
+	if (n == 0) return NULL;
+	int mid = n / 2;
+	pitem t = new item (a[mid], rand ());
+	t->l = build (a, mid);
+	t->r = build (a + mid + 1, n - mid - 1);
+	heapify (t);
+	return t;
+}
+```
 
 ## Implicit Treaps
 
@@ -146,7 +173,7 @@ Now it's clear how to calculate the implicit key of current node quickly. Since 
 
 Here are the new implementations of **Split** and **Merge**:
 
-```
+```cpp
 void merge (pitem & t, pitem l, pitem r) {
 	if (!l || !r)
 		t = l ? l : r;
@@ -186,7 +213,7 @@ Now let's consider the implementation of various operations on implicit treaps:
 
 Here is an example implementation of the implicit treap with reverse on the interval. For each node we store field called `value` which is the actual value of the array element at current position. We also provide implementation of the function `output()`, which outputs an array that corresponds to the current state of the implicit treap.
 
-```
+```cpp
 typedef struct item * pitem;
 struct item {
 	int prior, value, cnt;
@@ -257,3 +284,18 @@ void output (pitem t) {
 ## Literature
 
 * [Blelloch, Reid-Miller "Fast Set Operations Using Treaps"](https://www.cs.cmu.edu/~scandal/papers/treaps-spaa98.pdf)
+
+## Practice Problems
+
+* [SPOJ - Ada and Aphids](http://www.spoj.com/problems/ADAAPHID/)
+* [SPOJ - Ada and Harvest](http://www.spoj.com/problems/ADACROP/)
+* [Codeforces - Radio Stations](http://codeforces.com/contest/762/problem/E)
+* [SPOJ - Ghost Town](http://www.spoj.com/problems/COUNT1IT/)
+* [SPOJ - Arrangement Validity](http://www.spoj.com/problems/IITWPC4D/)
+* [SPOJ - All in One](http://www.spoj.com/problems/ALLIN1/)
+* [Codeforces - Dog Show](http://codeforces.com/contest/847/problem/D)
+* [Codeforces - Yet Another Array Queries Problem](http://codeforces.com/contest/863/problem/D)
+* [SPOJ - Mean of Array](http://www.spoj.com/problems/MEANARR/)
+* [SPOJ - TWIST](http://www.spoj.com/problems/TWIST/)
+* [SPOJ - KOILINE](http://www.spoj.com/problems/KOILINE/)
+* [CodeChef - The Prestige](https://www.codechef.com/problems/PRESTIGE)
