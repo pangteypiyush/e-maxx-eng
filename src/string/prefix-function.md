@@ -63,7 +63,7 @@ To accomplish this, we have to use all the information computed in the previous 
 So let us compute the value of the prefix function $\pi$ for $i + 1$.
 If $s[i+1] = s[\pi[i]]$, then we can say with certainty that $\pi[i+1] = \pi[i] + 1$, since we already know that the suffix at position $i$ of length $\pi[i]$ is equal to the prefix of length $\pi[i]$.
 This is illustrated again with an example.
-$$\underbrace{\overbrace{s_0 ~ s_1 ~ s_2}^{\pi[i]} ~ \overbrace{s_3}^{s_3 = s_{i+1}}}\_{\pi[i+1] = \pi[i] + 1} ~ \dots ~ \underbrace{\overbrace{s_{i-2} ~ s_{i-1} ~ s_{i}}^{\pi[i]} ~ \overbrace{s_{i+1}}^{s_3 = s_i + 1}}\_{\pi[i+1] = \pi[i] + 1}$$
+$$\underbrace{\overbrace{s_0 ~ s_1 ~ s_2}^{\pi[i]} ~ \overbrace{s_3}^{s_3 = s_{i+1}}}\_{\pi[i+1] = \pi[i] + 1} ~ \dots ~ \underbrace{\overbrace{s_{i-2} ~ s_{i-1} ~ s_{i}}^{\pi[i]} ~ \overbrace{s_{i+1}}^{s_3 = s_{i + 1}}}\_{\pi[i+1] = \pi[i] + 1}$$
 
 If this is not the case, $s[i+1] \neq s[\pi[i]]$, then we need to try a shorter string.
 In order to speed things up, we would like to immediately move to the longest length $j \lt \pi[i]$, such that the prefix property in the position $i$ holds, i.e. $s[0 \dots j-1] = s[i-j+1 \dots i]$:
@@ -128,7 +128,7 @@ Given a text $t$ and a string $s$, we want to find and display the positions of 
 
 For convenience we denote with $n$ the length of the string s and with $m$ the length of the text $t$.
 
-We generate the string $s + \\# + t$, where $\\#$ is a separator that appear in $s$ and neither in $t$.
+We generate the string $s + \\# + t$, where $\\#$ is a separator that appears neither in $s$ nor in $t$.
 Let us calculate the prefix function for this string.
 Now think about the meaning of the values of the prefix function, except for the first $n + 1$ entries (which belong to the string $s$ and the separator).
 By definition the value $\pi[i]$ shows the longest length of a substring ending in position $i$ that coincides with the prefix.
@@ -225,7 +225,7 @@ As a result, it turns out that all blocks are equal, therefore we can compress t
 
 Of course we still need to show that this is actually the optimum.
 Indeed, if there was a smaller compression than $k$, than the prefix function at the end would be greater than $n - k$.
-Therefore $k$ has is really the answer.
+Therefore $k$ is really the answer.
 
 Now let us assume that $n$ is not divisible by $k$.
 We show that this implies that the length of the answer is $n$.
@@ -245,7 +245,7 @@ $$s_4 = s_3, ~ s_5 = s_4, ~ s_6 = s_5, ~ s_7 = s_6 ~ \Rightarrow ~ s_0 = s_1 = s
 
 Let's return to the concatenation to the two strings through a separator, i.e. for the strings $s$ and $t$ we compute the prefix function for the string $s + \\# + t$.
 Obviously, since $\\#$ is a separator, the value of the prefix function will never exceed $|s|$.
-If follows, that it is sufficient to only store the string $s + \\#$ and the values of the prefix function for it, and we can compute the prefix function for all subsequent character on the fly:
+It follows, that it is sufficient to only store the string $s + \\#$ and the values of the prefix function for it, and we can compute the prefix function for all subsequent character on the fly:
 $$\underbrace{s_0 ~ s_1 ~ \dots ~ s_{n-1} ~ \\#}\_{\text{need to store}} ~ \underbrace{t_0 ~ t_1 ~ \dots ~ t_{m-1}}\_{\text{do not need to store}}$$
 
 Indeed, in such a situation, knowing the next character $c \in t$ and the value of the prefix function of the previous position is enough information to compute the next value of the prefix function, without using any previous characters of the string $t$ and the value of the prefix function in them.
@@ -366,3 +366,4 @@ The problem can be solved in the same way by constructing the automaton of the p
 * [SPOJ - Pattern Find](http://www.spoj.com/problems/NAJPF/)
 * [Codeforces - Anthem of Berland](http://codeforces.com/contest/808/problem/G)
 * [Codeforces - MUH and Cube Walls](http://codeforces.com/problemset/problem/471/D)
+* [Codeforces - Prefixes and Suffixes](https://codeforces.com/contest/432/problem/D)

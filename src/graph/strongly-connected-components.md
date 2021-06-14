@@ -5,7 +5,7 @@
 ## Definitions
 You are given a directed graph $G$ with vertices $V$ and edges $E$. It is possible that there are loops and multiple edges. Let's denote $n$ as number of vertices and $m$ as number of edges in $G$.
 
-**Strongly connected component** is subset of vertices $C$ such that any two vertices of this subset are reachable from each other, i.e. for any $u, v \in C$:
+**Strongly connected component** is a maximal subset of vertices $C$ such that any two vertices of this subset are reachable from each other, i.e. for any $u, v \in C$:
 $$
 u \mapsto v, v \mapsto u
 $$
@@ -27,14 +27,19 @@ First, let's make notations: let's define exit time $tout[C]$ from the strongly 
 **Theorem**. Let $C$ and $C'$ are two different strongly connected components and there is an edge $(C, C')$ in a condensation graph between these two vertices. Then $tout[C] > tout[C']$.
 
 There are two main different cases at the proof depending on which component will be visited by depth first search first, i.e. depending on difference between $tin[C]$ and $tin[C']$:
-** The component $C$ was reached first. It means that depth first search comes at some vertex $v$ of component $C$ at some moment, but all other vertices of components $C$ and $C'$ were not visited yet. By condition there is an edge $(C, C')$ in a condensation graph, so not only the entire component $C$ is reachable from $v$ but the whole component $C'$ is reachable as well. It means that depth first search that is running from vertex $v$ will visit all vertices of components $C$ and $C'$, so they will be descendants for $v$ in a depth first search tree, i.e. for each vertex $u \in C \cup C', u \ne v$ we have that $tout[v] > tout[u]$, as we claimed.
-** Assume that component $C'$ was visited first. Similarly, depth first search comes at some vertex $v$ of component $C'$ at some moment, but all other vertices of components $C$ and $C'$ were not visited yet. But by condition there is an edge $(C, C')$ in the condensation graph, so, because of acyclic property of condensation graph, there is no back path from $C'$ to $C$, i.e. depth first search from vertex $v$ will not reach vertices of $C$. It means that vertices of $C$ will be visited by depth first search later, so $tout[C] > tout[C']$. This completes the proof.
+
+- The component $C$ was reached first. It means that depth first search comes at some vertex $v$ of component $C$ at some moment, but all other vertices of components $C$ and $C'$ were not visited yet. By condition there is an edge $(C, C')$ in a condensation graph, so not only the entire component $C$ is reachable from $v$ but the whole component $C'$ is reachable as well. It means that depth first search that is running from vertex $v$ will visit all vertices of components $C$ and $C'$, so they will be descendants for $v$ in a depth first search tree, i.e. for each vertex $u \in C \cup C', u \ne v$ we have that $tout[v] > tout[u]$, as we claimed.
+
+- Assume that component $C'$ was visited first. Similarly, depth first search comes at some vertex $v$ of component $C'$ at some moment, but all other vertices of components $C$ and $C'$ were not visited yet. But by condition there is an edge $(C, C')$ in the condensation graph, so, because of acyclic property of condensation graph, there is no back path from $C'$ to $C$, i.e. depth first search from vertex $v$ will not reach vertices of $C$. It means that vertices of $C$ will be visited by depth first search later, so $tout[C] > tout[C']$. This completes the proof.
 
 Proved theorem is **the base of algorithm** for finding strongly connected components. It follows that any edge $(C, C')$ in condensation graph comes from a component with a larger value of $tout$ to component with a smaller value.
 
 If we sort all vertices $v \in V$ by decreasing of their exit moment $tout[v]$ then the first vertex $u$ is going to be a vertex from "root" strongly connected component, i.e. a vertex that no edges in a condensation graph come into. Now we want to run such search from this vertex $u$ so that it will visit all vertices in this strongly connected component, but not others; doing so, we can gradually select all strongly connected components: let's remove all vertices corresponding to the first selected component, and then let's find a vertex with the largest value of $tout$, and run this search from it, and so on.
 
-Let's consider transposed graph $G^T$, i.e. graph received from $G$ by changing direction of each edge on the opposite. Obviously this graph will have the same strongly connected components, as an initial graph. More over, condensation graph $G^{SCC}$. It means that there will be no edges from our "root" component to other components.
+Let's consider transposed graph $G^T$, i.e. graph received from $G$ by reversing the direction of each edge.
+Obviously, this graph will have the same strongly connected components as the initial graph.
+Moreover, the condensation graph $G^{SCC}$ will also get transposed.
+It means that there will be no edges from our "root" component to other components.
 
 Thus, for visiting the whole "root" strongly connected component, containing vertex $v$, is enough to run search from vertex $v$ in graph $G^T$. This search will visit all vertices of this strongly connected component and only them. As was mentioned before, we can remove these vertices from the graph then, and find the next vertex with a maximal value of $tout[v]$ and run search in transposed graph from it, and so on.
 
@@ -50,53 +55,96 @@ Finally, it is appropriate to mention [topological sort](./graph/topological-sor
 
 ## Implementation
 ```cpp
-    vector < vector<int> > g, gr;
-    vector<bool> used;
-    vector<int> order, component;
-     
-    void dfs1 (int v) {
-        used[v] = true;
-        for (size_t i=0; i<g[v].size(); ++i)
-            if (!used[ g[v][i] ])
-                dfs1 (g[v][i]);
-        order.push_back (v);
+vector<vector<int>> adj, adj_rev;
+vector<bool> used;
+vector<int> order, component;
+ 
+void dfs1(int v) {
+    used[v] = true;
+
+    for (auto u : adj[v])
+        if (!used[u])
+            dfs1(u);
+
+    order.push_back(v);
+}
+ 
+void dfs2(int v) {
+    used[v] = true;
+    component.push_back(v);
+
+    for (auto u : adj_rev[v])
+        if (!used[u])
+            dfs2(u);
+}
+ 
+int main() {
+    int n;
+    // ... read n ...
+
+    for (;;) {
+        int a, b;
+        // ... read next directed edge (a,b) ...
+        adj[a].push_back(b);
+        adj_rev[b].push_back(a);
     }
-     
-    void dfs2 (int v) {
-        used[v] = true;
-        component.push_back (v);
-        for (size_t i=0; i<gr[v].size(); ++i)
-            if (!used[ gr[v][i] ])
-                dfs2 (gr[v][i]);
-    }
-     
-    int main() {
-        int n;
-        ... reading n ...
-        for (;;) {
-            int a, b;
-            ... reading next edge (a,b) ...
-            g[a].push_back (b);
-            gr[b].push_back (a);
+ 
+    used.assign(n, false);
+
+    for (int i = 0; i < n; i++)
+        if (!used[i])
+            dfs1(i);
+
+    used.assign(n, false);
+    reverse(order.begin(), order.end());
+
+    for (auto v : order)
+        if (!used[v]) {
+            dfs2 (v);
+
+            // ... processing next component ...
+
+            component.clear();
         }
-     
-        used.assign (n, false);
-        for (int i=0; i<n; ++i)
-            if (!used[i])
-                dfs1 (i);
-        used.assign (n, false);
-        for (int i=0; i<n; ++i) {
-            int v = order[n-1-i];
-            if (!used[v]) {
-                dfs2 (v);
-                ... printing next component ...
-                component.clear();
-            }
-        }
-    }
+}
 ```
 
 Here, $g$ is graph, $gr$ is transposed graph. Function $dfs1$ implements depth first search on graph $G$, function $dfs2$ - on transposed graph $G^T$. Function $dfs1$ fills the list $order$ with vertices in increasing order of their exit times (actually, it is making a topological sort). Function $dfs2$ stores all reached vertices in list $component$, that is going to store next strongly connected component after each run.
+
+### Condensation Graph Implementation
+
+```cpp
+// continuing from previous code
+
+vector<int> roots(n, 0);
+vector<int> root_nodes;
+vector<vector<int>> adj_scc(n);
+
+for (auto v : order)
+    if (!used[v]) {
+        dfs2(v);
+
+        int root = component.front();
+        for (auto u : component) roots[u] = root;
+        root_nodes.push_back(root);
+
+        component.clear();
+    }
+
+
+for (int v = 0; v < n; v++)
+    for (auto u : adj[v]) {
+        int root_v = roots[v],
+            root_u = roots[u];
+
+        if (root_u != root_v)
+            adj_scc[root_v].insert(root_u);
+    }
+```
+
+Here, we have selected the root of each component as the first node in its list. This node will represent its entire SCC in the condensation graph. `roots[v]` indicates the root node for the SCC to which node `v` belongs. `root_nodes` is the list of all root nodes (one per component) in the condensation graph. 
+
+`adj_scc` is the adjacency list of the `root_nodes`. We can now traverse on `adj_scc` as our condensation graph, using only those nodes which belong to `root_nodes`.
 
 ## Literature
 
@@ -123,4 +171,7 @@ Here, $g$ is graph, $gr$ is transposed graph. Function $dfs1$ implements depth f
 * [SPOJ - Capital City](http://www.spoj.com/problems/CAPCITY/)
 * [Codeforces - Scheme](http://codeforces.com/contest/22/problem/E)
 * [SPOJ - Ada and Panels](http://www.spoj.com/problems/ADAPANEL/)
-
+* [CSES - Flight Routes Check](https://cses.fi/problemset/task/1682)
+* [CSES - Planets and Kingdoms](https://cses.fi/problemset/task/1683)
+* [CSES -Coin Collector](https://cses.fi/problemset/task/1686)
+* [Codeforces - Checkposts](https://codeforces.com/problemset/problem/427/C)

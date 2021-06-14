@@ -9,6 +9,12 @@ But in fact the FFT has been discovered repeatedly before, but the importance of
 Some researchers attribute the discovery of the FFT to Runge and König in 1924.
 But actually Gauss developed such a method already in 1805, but never published it.
 
+Notice, that the FFT algorithm presented here runs in $O(n \log n)$ time, but it doesn't work for multiplying arbitrary big polynomials with arbitrary large coefficients or for multiplying arbitrary big integers.
+It can easily handle polynomials of size $10^5$ with small coefficients, or multiplying two numbers of size $10^6$, but at some point the range and the precision of the used floating point numbers will not no longer be enough to give accurate results.
+That is usually enough for solving competitive programming problems, but there are also more complex variations that can perform arbitrary large polynomial/integer multiplications.
+E.g. in 1971 Schönhage and Strasser developed a variation for multiplying arbitrary large numbers that applies the FFT recursively in rings structures running in $O(n \log n \log \log n)$.
+And recently (in 2019) Harvey and van der Hoeven published an algorithm that runs in true $O(\log n)$.
+
 ## Discrete Fourier transform
 
 Let there be a polynomial of degree $n - 1$:
@@ -23,7 +29,7 @@ e.g. the principal $n$-th root $w_n = w_{n, 1} = e^{\frac{2 \pi i}{n}}$ can be u
 The **discrete Fourier transform (DFT)** of the polynomial $A(x)$ (or equivalently the vector of coefficients $(a_0, a_1, \dots, a_{n-1})$ is defined as the values of the polynomial at the points $x = w_{n, k}$, i.e. it is the vector:
 $$\begin{align}
 \text{DFT}(a_0, a_1, \dots, a_{n-1}) &= (y_0, y_1, \dots, y_{n-1}) \\\\
-&= (A(w_{n_0}), A(w_{n, 1}), \dots, A(w_{n, n-1})) \\\\
+&= (A(w_{n, 0}), A(w_{n, 1}), \dots, A(w_{n, n-1})) \\\\
 &= (A(w_n^0), A(w_n^1), \dots, A(w_n^{n-1}))
 \end{align}$$
 
@@ -531,7 +537,7 @@ We have to compute the products of $a$ with every cyclic shift of $b$.
 We generate two new arrays of size $2n$:
 We reverse $a$ and append $n$ zeros to it.
 And we just append $b$ to itself.
-When we multiply these two arrays as polynomials, and look at the coefficient $c[n-1],~ c[n],~ c[2n-2]$ of the product $c$, we get:
+When we multiply these two arrays as polynomials, and look at the coefficients $c[n-1],~ c[n],~ \dots,~ c[2n-2]$ of the product $c$, we get:
 $$c[k] = \sum_{i+j=k} a[i] b[j]$$
 And since all the elements $a[i] = 0$ for $i \ge n$:
 $$c[k] = \sum_{i=0}^{n-1} a[i] b[k-i]$$
@@ -595,5 +601,8 @@ If $x$ is the number of wildcards in $P$, then we will have a match of $P$ in $T
 - [SPOJ - ADAMATCH](http://www.spoj.com/problems/ADAMATCH/)
 - [Codeforces - Yet Another String Matching Problem](http://codeforces.com/problemset/problem/954/I)
 - [Codeforces - Lightsabers (hard)](http://codeforces.com/problemset/problem/958/F3)
+- [Codeforces - Running Competition](https://codeforces.com/contest/1398/problem/G)
 - [Kattis - K-Inversions](https://open.kattis.com/problems/kinversions)
 - [Codeforces - Dasha and cyclic table](http://codeforces.com/contest/754/problem/E)
+- [CodeChef - Expected Number of Customers](https://www.codechef.com/COOK112A/problems/MMNN01)
+- [CodeChef - Power Sum](https://www.codechef.com/SEPT19A/problems/PSUM)

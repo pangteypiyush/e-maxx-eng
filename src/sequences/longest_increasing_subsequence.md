@@ -200,7 +200,7 @@ And again we have to create an array of "ancestors" $p[i]$.
 $p[i]$ will be the index of the previous element for the optimal subsequence ending in element $i$.
 
 It's easy to maintain these two arrays in the course of iteration over the array $a[]$ alongside the computations of $d[]$.
-And at the end it in not difficult to restore the desired subsequence using these arrays.
+And at the end it is not difficult to restore the desired subsequence using these arrays.
 
 ## Solution in $O(n \log n)$ with data structures
 
@@ -281,10 +281,16 @@ I.e. go from left to right and assign the current number or that subsequence end
 
 ## Practice Problems
 
-- [Topcoder - IntegerSequence](https://community.topcoder.com/stat?c=problem_statement&pm=5922&rd=8075)
-- [Topcoder - AutoMarket](https://community.topcoder.com/stat?c=problem_statement&pm=3937&rd=6532)
-- [Codeforces - Tourist](http://codeforces.com/contest/76/problem/F)
-- [Codeforces - LCIS](http://codeforces.com/problemset/problem/10/D)
-- [SPOJ - SUPPER](http://www.spoj.com/problems/SUPPER/)
-- [Topcoder - BridgeArrangement](https://community.topcoder.com/stat?c=problem_statement&pm=2967&rd=5881)
 - [ACMSGURU - "North-East"](http://codeforces.com/problemsets/acmsguru/problem/99999/521)
+- [Codeforces - LCIS](http://codeforces.com/problemset/problem/10/D)
+- [Codeforces - Tourist](http://codeforces.com/contest/76/problem/F)
+- [SPOJ - DOSA](https://www.spoj.com/problems/DOSA/)
+- [SPOJ - HMLIS](https://www.spoj.com/problems/HMLIS/)
+- [SPOJ - ONEXLIS](https://www.spoj.com/problems/ONEXLIS/)
+- [SPOJ - SUPPER](http://www.spoj.com/problems/SUPPER/)
+- [Topcoder - AutoMarket](https://community.topcoder.com/stat?c=problem_statement&pm=3937&rd=6532)
+- [Topcoder - BridgeArrangement](https://community.topcoder.com/stat?c=problem_statement&pm=2967&rd=5881)
+- [Topcoder - IntegerSequence](https://community.topcoder.com/stat?c=problem_statement&pm=5922&rd=8075)
+- [UVA - Back To Edit Distance](https://onlinejudge.org/external/127/12747.pdf)
+- [UVA - Happy Birthday](https://onlinejudge.org/external/120/12002.pdf)
+- [UVA - Tiling Up Blocks](https://onlinejudge.org/external/11/1196.pdf)

@@ -107,7 +107,6 @@ $$ \begin{array}{rll}
 \end{array}$$
 Thus using above two equations Fibonacci numbers can be calculated easily by the following code:
 
-The above code returns $F_n$ and $F_{n+1}$ as a pair.
 ```cpp
 pair<int, int> fib (int n) {
     if (n == 0)
@@ -122,6 +121,7 @@ pair<int, int> fib (int n) {
         return {c, d};
 }
 ```
+The above code returns $F_n$ and $F_{n+1}$ as a pair.
 
 ## Periodicity modulo p
 
@@ -141,3 +141,6 @@ We now choose two pairs of identical remainders with the smallest indices in the
 * [SPOJ - Fibonacci Sum](http://www.spoj.com/problems/FIBOSUM/)
 * [HackerRank - Is Fibo](https://www.hackerrank.com/contests/codesprint5/challenges/is-fibo/problem)
 * [Project Euler - Even Fibonacci numbers](https://www.hackerrank.com/contests/projecteuler/challenges/euler002/problem)
+* [DMOJ - Fibonacci Sequence](https://dmoj.ca/problem/fibonacci)
+* [DMOJ - Fibonacci Sequence (Harder)](https://dmoj.ca/problem/fibonacci2)
+

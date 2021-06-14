@@ -17,7 +17,7 @@ Thus the basic interface of this data structure consists of only three operation
 - `find_set(v)` - returns the representative (also called leader) of the set that contains the element `v`.
 This representative is an element of its corresponding set.
 It is selected in each set by the data structure itself (and can change over time, namely after `union_sets` calls).
-This representative can be used to check if two elements are part of the same set of not.
+This representative can be used to check if two elements are part of the same set or not.
 `a` and `b` are exactly in the same set, if `find_set(a) == find_set(b)`.
 Otherwise they are in different sets.
 
@@ -34,10 +34,10 @@ In the following image you can see the representation of such trees.
 
 ![Example-image of the set representation with trees](&imgroot&/DSU_example.png)
 
-At the beginning every element starts as a single set, therefore each vertex is its own tree.
+In the beginning, every element starts as a single set, therefore each vertex is its own tree.
 Then we combine the set containing the element 1 and the set containing the element 2.
 Then we combine the set containing the element 3 and the set containing the element 4.
-And in the last step we can the sets containing the elements 1 and 3 are merged.
+And in the last step, we combine the set containing the element 1 and the set containing the element 3.
 
 For the implementation this means that we will have to maintain an array `parent` that stores a reference to its immediate ancestor in the tree.
 
@@ -107,16 +107,15 @@ int find_set(int v) {
 ```
 
 The simple implementation does what was intended:
-first find the representative of the set (root vertex), and the in the process of stack unwinding the visited nodes are attached directly to the representative.
+first find the representative of the set (root vertex), and then in the process of stack unwinding the visited nodes are attached directly to the representative.
 
 This simple modification of the operation already achieves the time complexity $O(\log n)$ per call on average (here without proof).
 There is a second modification, that will make it even faster.
 
 ### Union by size / rank
-
 In this optimization we will change the `union_set` operation.
 To be precise, we will change which tree gets attached to the other one.
-In the native implementation the second tree always got attached to the first one.
+In the naive implementation the second tree always got attached to the first one.
 In practice that can lead to trees containing chains of length $O(n)$.
 With this optimization we will avoid this by choosing very carefully which tree gets attached.
 
@@ -168,29 +167,6 @@ void union_sets(int a, int b) {
 ```
 Both optimizations are equivalent in terms of time and space complexity. So in practice you can use any of them.
 
-### Randomized linking
-
-This optimization may be a substitute for the union by size / rank.
-Basically you will randomly attach a tree to the other instead of choosing based on the size/rank of each tree.
-
-The complexity of this optimization is more difficult to be analyzed, but it can be proved that the complexity is the same of the union by rank.
-You can read more about [here](http://www.cis.upenn.edu/~sanjeev/papers/soda14_disjoint_set_union.pdf).
-
-Since you will not need to store any additional information over the sets, this implementation will be cleaner and easier than the implementation of union by rank.
-
-
-```cpp
-void union_sets(int a, int b) {
-    a = find_set(a);
-    b = find_set(b);
-    if (a != b) {
-        if (rand() % 2)
-            swap(a, b);
-        parent[b] = a;
-    }
-}
-```
-
 ### Time complexity
 
 As mentioned before, if we combine both optimizations - path compression with union by size / rank - we will reach nearly constant time queries.
@@ -204,6 +180,52 @@ E.g. in our case a single call might take $O(\log n)$ in the worst case, but if 
 We will also not present a proof for this time complexity, since it is quite long and complicated.
 
 Also, it's worth mentioning that DSU with union by size / rank, but without path compression works in $O(\log n)$ time per query.
+
+### Linking by index / coin-flip linking
+
+Both union by rank and union by size require that you store additional data for each set, and maintain these values during each union operation.
+There exist also a randomized algorithm, that simplifies the union operation a little bit: linking by index.
+
+We assign each set a random value called the index, and we attach the set with the smaller index to the one with the larger one.
+It is likely that a bigger set will have a bigger index than the smaller set, therefore this operation is closely related to union by size.
+In fact it can be proven, that this operation has the same time complexity as union by size.
+However in practice it is slightly slower than union by size.
+
+You can find a proof of the complexity and even more union techniques [here](http://www.cis.upenn.edu/~sanjeev/papers/soda14_disjoint_set_union.pdf).
+
+```cpp
+void make_set(int v) {
+    parent[v] = v;
+    index[v] = rand();
+}
+
+void union_sets(int a, int b) {
+    a = find_set(a);
+    b = find_set(b);
+    if (a != b) {
+        if (index[a] < index[b])
+            swap(a, b);
+        parent[b] = a;
+    }
+}
+```
+
+It's a common misconception that just flipping a coin, to decide which set we attach to the other, has the same complexity.
+However that's not true.
+The paper linked above conjectures that coin-flip linking combined with path compression has complexity $\Omega\left(n \frac{\log n}{\log \log n}\right)$.
+And in benchmarks it performs a lot worse than union by size/rank or linking by index.
+
+```cpp
+void union_sets(int a, int b) {
+    a = find_set(a);
+    b = find_set(b);
+    if (a != b) {
+        if (rand() % 2)
+            swap(a, b);
+        parent[b] = a;
+    }
+}
+```
 
 ## Applications and various improvements
 
@@ -253,7 +275,7 @@ With DSU you can find the end point, to which we get after following all edges f
 
 A good example of this application is the **problem of painting subarrays**.
 We have a segment of length $L$, each element initially has the color 0.
-We have to repaint the subarray $[l; r]$ with the color $c$ for each query $(l, r, c)$.
+We have to repaint the subarray $[l, r]$ with the color $c$ for each query $(l, r, c)$.
 At the end we want to find the final color of each cell.
 We assume that we know all the queries in advance, i.e. the task is offline.
 
@@ -262,7 +284,7 @@ Thus initially each cell points to itself.
 After painting one requested repaint of a segment, all cells from that segment will point to the cell after the segment.
 
 Now to solve this problem, we consider the queries **in the reverse order**: from last to first.
-This way when we execute a query, we only have to paint exactly the unpainted cells in the subarray $[l; r]$.
+This way when we execute a query, we only have to paint exactly the unpainted cells in the subarray $[l, r]$.
 All other cells already contain their final color.
 To quickly iterate over all unpainted cells, we use the DSU.
 We find the left-most unpainted cell inside of a segment, repaint it, and with the pointer we move to the next empty cell to the right.
@@ -273,7 +295,7 @@ Therefore the complexity will be $O(\log n)$ per union (which is also quite fast
 Implementation:
 
 ```cpp
-for (int i = 0; i < L; i++) {
+for (int i = 0; i <= L; i++) {
     make_set(i);
 }
 
@@ -560,3 +582,9 @@ However it should also be noted, that there are several articles **disputing** t
 * [Codeforces - Roads not only in Berland](http://codeforces.com/contest/25/problem/D)
 * [TIMUS - Parity](http://acm.timus.ru/problem.aspx?space=1&num=1003)
 * [SPOJ - Strange Food Chain](http://www.spoj.com/problems/CHAIN/)
+* [SPOJ - COLORFUL ARRAY](https://www.spoj.com/problems/CLFLARR/)
+* [SPOJ - Consecutive Letters](https://www.spoj.com/problems/CONSEC/)
+* [Toph - Unbelievable Array](https://toph.co/p/unbelievable-array)
+* [HackerEarth - Lexicographically minimal string](https://www.hackerearth.com/practice/data-structures/disjoint-data-strutures/basics-of-disjoint-data-structures/practice-problems/algorithm/lexicographically-minimal-string-6edc1406/description/)
+* [HackerEarth - Fight in Ninja World](https://www.hackerearth.com/practice/algorithms/graphs/breadth-first-search/practice-problems/algorithm/containers-of-choclates-1/)
+

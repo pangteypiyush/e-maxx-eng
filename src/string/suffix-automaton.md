@@ -1,15 +1,15 @@
 <!--?title Suffix Automaton -->
 # Suffix Automaton
 
-A **suffix automaton** is a powerful data structure that allows solving many string-related problems.
+A **suffix automaton** is a powerful data structure that allows solving many string-related problems. 
 
 For example, you can search for all occurrences of one string in another, or count the amount of different substrings of a given string.
 Both tasks can be solved in linear time with the help of a suffix automaton.
 
-Intuitively a suffix automaton can be understood as compressed form of **all substrings** of a given string.
+Intuitively a suffix automaton can be understood as a compressed form of **all substrings** of a given string.
 An impressive fact is, that the suffix automaton contains all this information in a highly compressed form.
 For a string of length $n$ it only requires $O(n)$ memory.
-Moreover, it can also be build in $O(n)$ time (if we consider the size $k$ of the alphabet as a constant), otherwise both the memory and the time complexity will be $O(n \log k)$.
+Moreover, it can also be built in $O(n)$ time (if we consider the size $k$ of the alphabet as a constant), otherwise both the memory and the time complexity will be $O(n \log k)$.
 
 The linearity of the size of the suffix automaton was first discovered in 1983 by Blumer et al., and in 1985 the first linear algorithms for the construction was presented by Crochemore and Blumer.
 
@@ -35,7 +35,7 @@ The simplest and most important property of a suffix automaton is, that it conta
 Any path starting at the initial state $t_0$, if we write down the labels of the transitions, forms a **substring** of $s$.
 And conversely every substring of $s$ corresponds to a certain path starting at $t_0$.
 
-In order to simplify the explanations, we will say that the substrings **corresponds** to that path (starting at $t_0$ and the labels spell the substring).
+In order to simplify the explanations, we will say that the substring **corresponds** to that path (starting at $t_0$ and the labels spell the substring).
 And conversely we say that any path **corresponds** to the string spelled by its labels.
 
 One or multiple paths can lead to a state.
@@ -120,12 +120,12 @@ But then at every occurrence of $w$ also appears the substring $u$, which means 
 
 **Lemma 3**:
 Consider an $endpos$-equivalence class.
-Sort all the substrings in this class by non-increasing length.
+Sort all the substrings in this class by decreasing length.
 Then in the resulting sequence each substring will be one shorter than the previous one, and at the same time will be a suffix of the previous one.
 In other words, in a same equivalence class, the shorter substrings are actually suffixes of the longer substrings, and they take all possible lengths in a certain interval $[x; y]$.
 
 Proof:
-Fix come $endpos$-equivalent class.
+Fix some $endpos$-equivalence class.
 If it only contains one string, then the lemma is obviously true.
 Now let's say that the number of strings in the class is greater than one.
 
@@ -145,12 +145,12 @@ Consider some state $v \ne t_0$ in the automaton.
 As we know, the state $v$ corresponds to the class of strings with the same $endpos$ values.
 And if we denote by $w$ the longest of these strings, then all the other strings are suffixes of $w$.
 
-We also know the first few suffixes of a string $w$ (if we consider suffixes in descending order of their length) are all contained in this equivalent class, and all other suffixes (at least one other - the empty suffix) are in some other classes.
+We also know the first few suffixes of a string $w$ (if we consider suffixes in descending order of their length) are all contained in this equivalence class, and all other suffixes (at least one other - the empty suffix) are in some other classes.
 We denote by $t$ the biggest such suffix, and make a suffix link to it.
 
-In other words, a **suffix link** $link(v)$ leads to the state that corresponds to the **longest suffix** of $w$ that is another $endpos$-equivalent class.
+In other words, a **suffix link** $link(v)$ leads to the state that corresponds to the **longest suffix** of $w$ that is in another $endpos$-equivalence class.
 
-Here we assume that the initial state $t_0$ corresponds to its own equivalence class (containing only the empty string), and for convenience we set $endpos(t) = \\{-1, 0, \dots, length(s)-1\\}$.
+Here we assume that the initial state $t_0$ corresponds to its own equivalence class (containing only the empty string), and for convenience we set $endpos(t_0) = \\{-1, 0, \dots, length(s)-1\\}$.
 
 **Lemma 4**:
 Suffix links form a **tree** with the root $t_0$.
@@ -164,7 +164,7 @@ Therefore, by moving along the suffix links, we will sooner or later come to the
 If we construct a tree using the sets $endpos$ (by the rule that the set of a parent node contains the sets of all children as subsets), then the structure will coincide with the tree of suffix links.
 
 Proof:
-The fact that we can construct a tree using the sets $endpos$ follows directly from Lemma 2 (that any two sets either do not intersect of one is contained in the other).
+The fact that we can construct a tree using the sets $endpos$ follows directly from Lemma 2 (that any two sets either do not intersect or one is contained in the other).
 
 Let us now consider an arbitrary state $v \ne t_0$, and its suffix link $link(v)$.
 From the definition of the suffix link and from Lemma 2 it follows that
@@ -211,7 +211,7 @@ Let us describe this process:
   - Let $last$ be the state corresponding to the entire string before adding the character $c$.
     (Initially we set $last = 0$, and we will change $last$ in the last step of the algorithm accordingly.)
   - Create a new state $cur$, and assign it with $len(cur) = len(last) + 1$.
-    The value $link(cur)$ is not know at the time.
+    The value $link(cur)$ is not known at the time.
   - Now we to the following procedure:
     We start at the state $last$.
     While there isn't a transition through the letter $c$, we will add a transition to the state $cur$, and follow the suffix link.
@@ -713,4 +713,7 @@ After that, the answer to the problem will be the string $longest(v)$ for the st
 
 ## Practice Problems
 
+  - [AtCoder - K-th Substring](https://atcoder.jp/contests/abc097/tasks/arc097_a)
   - [SPOJ - SUBLEX](https://www.spoj.com/problems/SUBLEX/)
+  - [Codeforces - Cyclical Quest](https://codeforces.com/problemset/problem/235/C)
+  - [Codeforces - String](https://codeforces.com/contest/128/problem/B)

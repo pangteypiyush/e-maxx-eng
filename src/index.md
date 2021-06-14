@@ -7,6 +7,8 @@ and data structures especially popular in field of competitive programming.
 Moreover we want to improve the collected knowledge by extending the articles
 and adding new articles to the collection.*
 
+*For a similar project, that translates the collection of articles into Portuguese, visit [https://cp-algorithms-brasil.com](https://cp-algorithms-brasil.com).*
+
 ## Articles
 
 ### Algebra
@@ -20,6 +22,8 @@ and adding new articles to the collection.*
 - **Prime numbers**
     - [Sieve of Eratosthenes](./algebra/sieve-of-eratosthenes.html)
     - [Sieve of Eratosthenes With Linear Time Complexity](./algebra/prime-sieve-linear.html)
+    - [Primality tests](./algebra/primality_tests.html)
+    - [Integer factorization](./algebra/factorization.html)
 - **Number-theoretic functions**
     - [Euler's totient function](./algebra/phi-function.html)
     - [Number of divisors / sum of divisors](./algebra/divisors.html)
@@ -28,9 +32,10 @@ and adding new articles to the collection.*
     - [Linear Congruence Equation](./algebra/linear_congruence_equation.html)
     - [Chinese Remainder Theorem](./algebra/chinese-remainder-theorem.html)
     - [Factorial modulo $p$](./algebra/factorial-modulo.html)
-    - [Discrete Root](./algebra/discrete-root.html)
-    - [Primitive Root](./algebra/primitive-root.html)
     - [Discrete Log](./algebra/discrete-log.html)
+    - [Primitive Root](./algebra/primitive-root.html)
+    - [Discrete Root](./algebra/discrete-root.html)
+    - [Montgomery Multiplication](./algebra/montgomery_multiplication.html)
 - **Number systems**
     - [Balanced Ternary](./algebra/balanced-ternary.html)
     - [Gray code](./algebra/gray-code.html)
@@ -38,6 +43,7 @@ and adding new articles to the collection.*
     - [Enumerating submasks of a bitmask](./algebra/all-submasks.html)
     - [Arbitrary-Precision Arithmetic](./algebra/big-integer.html)
     - [Fast Fourier transform](./algebra/fft.html)
+    - [Operations on polynomials and series](./algebra/polynomial.html)
 
 ### Data Structures
 
@@ -68,7 +74,7 @@ and adding new articles to the collection.*
 - **Fundamentals**
     - [String Hashing](./string/string-hashing.html)
     - [Rabin-Karp for String Matching](./string/rabin-karp.html)
-    - [Prefix function](./string/prefix-function.html)
+    - [Prefix function - Knuth-Morris-Pratt](./string/prefix-function.html)
     - [Z-function](./string/z-function.html)
     - [Suffix Array](./string/suffix-array.html)
     - [Aho-Corasick algorithm](./string/aho_corasick.html)
@@ -78,7 +84,7 @@ and adding new articles to the collection.*
     - [Lyndon factorization](./string/lyndon_factorization.html)
 - **Tasks**
     - [Expression parsing](./string/expression_parsing.html)
-    - [Finding all sub-palindromes in O(N)](./string/manacher.html)
+    - [Manacher's Algorithm - Finding all sub-palindromes in O(N)](./string/manacher.html)
     - [Finding repetitions](./string/main_lorentz.html)
 
 ### Linear Algebra
@@ -129,6 +135,7 @@ and adding new articles to the collection.*
     - [Oriented area of a triangle](./geometry/oriented-triangle-area.html)
     - [Area of simple polygon](./geometry/area-of-simple-polygon.html)
     - [Check if points belong to the convex polygon in O(log N)](./geometry/point-in-convex-polygon.html)
+    - [Minkowski sum of convex polygons](./geometry/minkowski.html)
     - [Pick's Theorem - area of lattice polygons](./geometry/picks-theorem.html)
     - [Lattice points of non-lattice polygon](./geometry/lattice-points.html)
 - **Convex hull**
@@ -140,6 +147,8 @@ and adding new articles to the collection.*
 - **Miscellaneous**
     - [Finding the nearest pair of points](./geometry/nearest_points.html)
     - [Delaunay triangulation and Voronoi diagram](./geometry/delaunay.html)
+    - [Vertical decomposition](./geometry/vertical_decomposition.html)
+    - [Half-plane intersection - S&I Algorithm in O(Nlog N)](./geometry/halfplane-intersection.html)
 
 ### Graphs
 
@@ -152,6 +161,7 @@ and adding new articles to the collection.*
     - [Finding Bridges Online](./graph/bridge-searching-online.html)
     - [Finding Articulation Points in O(N+M)](./graph/cutpoints.html)
     - [Strongly Connected Components and Condensation Graph](./graph/strongly-connected-components.html)
+    - [Strong Orientation](./graph/strong-orientation.html)
 - **Single-source shortest paths**
     - [Dijkstra - finding shortest paths from given vertex](./graph/dijkstra.html)
     - [Dijkstra on sparse graphs](./graph/dijkstra_sparse.html)
@@ -189,6 +199,7 @@ and adding new articles to the collection.*
     - [Assignment problem. Solution using min-cost-flow in O (N^5)](./graph/Assignment-problem-min-flow.html)
 - **Matchings and related problems**
     - [Bipartite Graph Check](./graph/bipartite-check.html)
+    - [Kuhn' Algorithm - Maximum Bipartite Matching](./graph/kuhn_maximum_bipartite_matching.html)
 - **Miscellaneous**
     - [Topological Sorting](./graph/topological-sort.html)
     - [Edge connectivity / Vertex connectivity](./graph/edge_vertex_connectivity.html)

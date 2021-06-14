@@ -44,7 +44,7 @@ Also note, that if $x$ is reachable from $\lnot x$, and $\lnot x$ is reachable f
 Whatever value we choose for the variable $x$, it will always end in a contradiction - if $x$ will be assigned $\text{true}$ then the implication tell us that $\lnot x$ should also be $\text{true}$ and visa versa.
 It turns out, that this condition is not only necessary, but also sufficient.
 We will prove this in a few paragraphs below.
-First recall, if a vertex if reachable from a second one, and the second one is reachable from the first one, then these two vertices are in the same strongly connected component.
+First recall, if a vertex is reachable from a second one, and the second one is reachable from the first one, then these two vertices are in the same strongly connected component.
 Therefore we can formulate the criterion for the existence of a solution as follows:
 
 In order for this 2-SAT problem to have a solution, it is necessary and sufficient that for any variable $x$ the vertices $x$ and $\lnot x$ are in different strongly connected components of the strong connection of the implication graph.
@@ -122,6 +122,7 @@ void dfs2(int v, int cl) {
 }
 
 bool solve_2SAT() {
+    order.clear();
     used.assign(n, false);
     for (int i = 0; i < n; ++i) {
         if (!used[i])
@@ -147,4 +148,6 @@ bool solve_2SAT() {
 ## Practice Problems
  * [UVA: Rectangles](https://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=3081)
  * [Codeforces: The Door Problem](http://codeforces.com/contest/776/problem/D)
+ * [Codeforces : Radio Stations](https://codeforces.com/problemset/problem/1215/F)
+ * [CSES : Giant Pizza](https://cses.fi/problemset/task/1684)
  

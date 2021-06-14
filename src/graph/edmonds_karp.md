@@ -24,7 +24,7 @@ It is easy to see that the following equation holds:
 $$\sum_{(s, u) \in E} f((s, u)) = \sum_{(u, t) \in E} f((u, t))$$
 
 A good analogy for a flow network is the following visualization:
-We represent edges as water pipes, the capacity of an edge is the maximal amount of water that can flow through the pipe per second, and the flow of an edge is the amount of water that currently flows though the pipe per second.
+We represent edges as water pipes, the capacity of an edge is the maximal amount of water that can flow through the pipe per second, and the flow of an edge is the amount of water that currently flows through the pipe per second.
 This motivates the first flow condition. There cannot flow more water through a pipe than its capacity.
 The vertices act as junctions, where water comes out of some pipes, and distributes it in some way to other pipes.
 This also motivates the second flow condition.
@@ -32,7 +32,7 @@ In each junction all the incoming water has to be distributed to the other pipes
 It cannot magically disappear or appear.
 The source $s$ is origin of all the water, and the water can only drain in the sink $t$.
 
-The following image show a flow network.
+The following image shows a flow network.
 The first value of each edge represents the flow, which is initially 0, and the second value represents the capacity.
 <center>![Flow network](&imgroot&/Flow1.png)</center>
 
@@ -43,14 +43,14 @@ Finding this maximal flow of a flow network is the problem that we want to solve
 In the visualization with water pipes, the problem can be formulated in the following way:
 how much water can we push through the pipes from the source to the sink.
 
-The following image show the maximal flow in the flow network.
+The following image shows the maximal flow in the flow network.
 <center>![Maximal flow](&imgroot&/Flow9.png)</center>
 
 ## Ford-Fulkerson method
 
 Let's define one more thing.
 A **residual capacity** of an directed edge is the capacity minus the flow.
-It should be noted that if there is a flow along some directed edge $(u, v)$, than the reversed edge has capacity 0 and we can define the flow of it as $f((v, u)) = -f((u, v))$.
+It should be noted that if there is a flow along some directed edge $(u, v)$, then the reversed edge has capacity 0 and we can define the flow of it as $f((v, u)) = -f((u, v))$.
 This also defines the residual capacity for all reversed edges.
 From all these edges we can create a **residual network**, which is just a network with the same vertices and same edges, but we use the residual capacities as capacities.
 
@@ -121,7 +121,7 @@ The matrix `capacity` stores the capacity for every pair of vertices.
 
 The function `maxflow` will return the value of the maximal flow.
 During the algorithm the matrix `capacity` will actually store the residual capacity of the network.
-The value of the flow in each edge will actually no stored, but it is easy to extent the implementation - by using an additional matrix - to also store the flow and return it.
+The value of the flow in each edge will actually not be stored, but it is easy to extend the implementation - by using an additional matrix - to also store the flow and return it.
 
 ```cpp edmondskarp
 int n;
@@ -175,7 +175,7 @@ int maxflow(int s, int t) {
 
 ## Integral flow theorem ## {#integral-theorem}
 
-The theorem simply says, that if every capacity in the network is integer, than also the flow in each edge will be integer in the maximal flow.
+The theorem simply says, that if every capacity in the network is integer, then the flow in each edge will be integer in the maximal flow.
 
 ## Max-flow min-cut theorem
 
@@ -197,3 +197,10 @@ A minimum cut can be found after performing a maximum flow computation using the
 One possible minimum cut is the following:
 the set of all vertices that can be reached from $s$ in the residual graph (using edges with positive residual capacity), and the set of all the other vertices.
 This partition can be easily found using [DFS](./graph/depth-first-search.html) starting at $s$.
+
+## Practice Problems
+- [Codeforces - Array and Operations](https://codeforces.com/contest/498/problem/c)
+- [Codeforces - Red-Blue Graph](https://codeforces.com/contest/1288/problem/f)
+- [CSES - Download Speed](https://cses.fi/problemset/task/1694)
+- [CSES - Police Chase](https://cses.fi/problemset/task/1695)
+- [CSES - School Dance](https://cses.fi/problemset/task/1696)

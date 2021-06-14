@@ -2,9 +2,14 @@
 
 # Floyd-Warshall Algorithm
 
-Given an undirected weighted graph $G$ with $n$ vertices. The task is to find the length of the shortest path $d_{ij}$ between each pair of vertices $i$ and $j$.
+Given a directed or an undirected weighted graph $G$ with $n$ vertices.
+The task is to find the length of the shortest path $d_{ij}$ between each pair of vertices $i$ and $j$.
 
-The graph may have negative weight edges, but no negative weight cycles (for then the shortest path is undefined).
+The graph may have negative weight edges, but no negative weight cycles.
+
+If there is such a negative cycle, you can just traverse this cycle over and over, in each iteration making the cost of the path smaller.
+So you can make certain paths arbitrarily small, or in other words that shortest path is undefined.
+That automatically means that an undirected graph cannot have any negative weight edges, as such an edge forms already a negative cycle as you can move back and forth along that edge as long as you like.
 
 This algorithm can also be used to detect the presence of negative cycles.
 The graph has a negative cycle if at the end of the algorithm, the distance from a vertex $v$ to itself is negative.
@@ -35,7 +40,7 @@ There are two fundamentally different cases:
 
     In this case, $d[i][j]$ will not change during the transition.
 
-*   The shortest path with internal vertices from $\\{1, 2, \dots, k\\} is shorter.
+*   The shortest path with internal vertices from $\\{1, 2, \dots, k\\}$ is shorter.
 
     This means that the new, shorter path passes through the vertex $k$.
     This means that we can split the shortest path between $i$ and $j$ into two paths:
@@ -157,3 +162,4 @@ To learn more about finding negative cycles in a graph, see the separate article
  * [UVA - 12179 - Randomly-priced Tickets](https://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=3331)
  * [LOJ - 1086 - Jogging Trails](http://lightoj.com/volume_showproblem.php?problem=1086)
  * [SPOJ - Ingredients](http://www.spoj.com/problems/INGRED/)
+ * [CSES - Shortest Routes II](https://cses.fi/problemset/task/1672)

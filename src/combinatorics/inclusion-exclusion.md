@@ -119,7 +119,8 @@ Task: count how many sequences of length $n$ exist consisting only of numbers $0
 
 Again let us turn to the inverse problem, i.e. we calculate the number of sequences which do **not** contain **at least one** of the numbers.
 
-Let's denote by $A_i (i = 0,1,2)$ the set of sequences in which **at least** $i$ of the numbers do **not** occur. The formula of inclusion-exclusion on the number of "bad" sequences will be:
+Let's denote by $A_i (i = 0,1,2)$ the set of sequences in which the digit $i$ does **not** occur.
+The formula of inclusion-exclusion on the number of "bad" sequences will be:
 
 $$ |A_0 \cup A_1 \cup A_2| = |A_0| + |A_1| + |A_2| - |A_0 \cap A_1| - |A_0 \cap A_2| - |A_1 \cap A_2| + |A_0 \cap A_1 \cap A_2| $$
 
@@ -228,7 +229,7 @@ Notice first that we can easily count the number of strings that satisfy at once
 
 Learn now to solve the first version of the problem: when the string must satisfy exactly $k$ of the patterns.
 
-To solve it, iterate and fix a specific subset $X$ from the set of patterns consisting of $k$ patterns. Then we have to count the number of strings that satisfy this set of patterns, and only matches it, that is, they don't match any other pattern. We will use the inclusion-exclusion principle in a slightly different manner: we sum on all supersets $Y$ (subsets from the original set of strings that contain $X$), and either add to the current answer of subtract it from the number of strings:
+To solve it, iterate and fix a specific subset $X$ from the set of patterns consisting of $k$ patterns. Then we have to count the number of strings that satisfy this set of patterns, and only matches it, that is, they don't match any other pattern. We will use the inclusion-exclusion principle in a slightly different manner: we sum on all supersets $Y$ (subsets from the original set of strings that contain $X$), and either add to the current answer or subtract it from the number of strings:
 
 $$ ans(X) = \sum_{Y \supseteq X} (-1)^{|Y|-k} \cdot f(Y) $$
 
@@ -287,13 +288,13 @@ However, this will again be non-polynomial in complexity $O(2^k \cdot k)$.
 
 Here goes a polynomial solution:
 
-We will use dynamic programming: let's compute the numbers $d[i][j]$ — the number of ways to get from the $i-th$ point to $j-th$, without stepping on any other obstacle (except for $i$ and $j$, of course). We will compute this number for all the obstacle cells, and also the starting and ending ones (all possible pairs of cells from these).
+We will use dynamic programming. For convenience, push (1,1) to the beginning and (n,m) at the end of the obstacles array. Let's compute the numbers $d[i]$ — the number of ways to get from the starting point ($0-th$) to $i-th$, without stepping on any other obstacle (except for $i$, of course). We will compute this number for all the obstacle cells, and also for the ending one.
 
-Let's forget for a second the obstacles and just count the number of paths from cell $i$ to $j$. We need to consider some "bad" paths, the ones that pass through the obstacles, and subtract them from the total number of ways of going from $i$ to $j$.
+Let's forget for a second the obstacles and just count the number of paths from cell $0$ to $i$. We need to consider some "bad" paths, the ones that pass through the obstacles, and subtract them from the total number of ways of going from $0$ to $i$.
 
-When considering an obstacle $t$ between $i$ and $j$ ($i < t < j$), on which we can step, we see that the number of paths from $i$ to $j$ that pass through $t$ which have $t$ as the **first obstacle between $i$ and $j$**. We can compute that as: $d[i][t]$ multiplied by the number of arbitrary paths from $t$ to $j$. We can count the number of "bad" ways summing this for all $t$ between $i$ and $j$.
+When considering an obstacle $t$ between $0$ and $i$ ($0 < t < i$), on which we can step, we see that the number of paths from $0$ to $i$ that pass through $t$ which have $t$ as the **first obstacle between start and $i$**. We can compute that as: $d[t]$ multiplied by the number of arbitrary paths from $t$ to $i$. We can count the number of "bad" ways summing this for all $t$ between $0$ and $i$.
 
-We can compute $d[i][j]$ in $O(k)$ for $O(k^2)$ pairs, so this solution has complexity $O(k^3)$.
+We can compute $d[i]$ in $O(k)$ for $O(k)$ obstacles, so this solution has complexity $O(k^2)$.
 
 ### The number of coprime quadruples
 
@@ -336,7 +337,7 @@ Now all we have left to solve is to learn to count the number of coprimes to $i$
 A faster solution is possible with such modification of the sieve of Eratosthenes:
 
 1. First, we find all numbers in the interval $[2;n]$ such that its simple factorization does not include a prime factor twice. We will also need to know, for these numbers, how many factors it includes.
-    * To do this we will maintain an array $deg[i]$ to store the number of primes in the factorization of $i$, and an array $good[i]$, to mark either if $i$ contains each factor at most twice ($good[i] = 1$) or not ($good[i] = 0$). When iterating from $2$ to $n$, if we reach a number that has $deg$ equal to $0$, then it is a prime and its $deg$ is $1$.
+    * To do this we will maintain an array $deg[i]$ to store the number of primes in the factorization of $i$, and an array $good[i]$, to mark either if $i$ contains each factor at most once ($good[i] = 1$) or not ($good[i] = 0$). When iterating from $2$ to $n$, if we reach a number that has $deg$ equal to $0$, then it is a prime and its $deg$ is $1$.
     * During the sieve of Eratosthenes, we will iterate $i$ from $2$ to $n$. When processing a prime number we go through all of its multiples and increase their $deg[]$. If one of these multiples is multiple of the square of $i$, then we can put $good$ as false.
 
 2. Second, we need to calculate the answer for all $i$ from $2$ to $n$, i.e., the array $cnt[]$ — the number of integers not coprime with $i$.
@@ -426,15 +427,18 @@ A list of tasks that can be solved using the principle of inclusions-exclusions:
 * [UVA #11806 "Cheerleaders" [difficulty: low]](http://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=2906)
 * [TopCoder SRM 477 "CarelessSecretary" [difficulty: low]](http://www.topcoder.com/stat?c=problem_statement&pm=10875)
 * [TopCoder TCHS 16 "Divisibility" [difficulty: low]](http://community.topcoder.com/stat?c=problem_statement&pm=6658&rd=10068)
-* [SPOJ #6285 NGM2 , "Another Game With Numbers" [difficulty: low]](http://www.spoj.pl/problems/NGM2/)
+* [SPOJ #6285 NGM2 , "Another Game With Numbers" [difficulty: low]](http://www.spoj.com/problems/NGM2/)
 * [TopCoder SRM 382 "CharmingTicketsEasy" [difficulty: medium]](http://community.topcoder.com/stat?c=problem_statement&pm=8470)
 * [TopCoder SRM 390 "SetOfPatterns" [difficulty: medium]](http://www.topcoder.com/stat?c=problem_statement&pm=8307)
 * [TopCoder SRM 176 "Deranged" [difficulty: medium]](http://community.topcoder.com/stat?c=problem_statement&pm=2013)
 * [TopCoder SRM 457 "TheHexagonsDivOne" [difficulty: medium]](http://community.topcoder.com/stat?c=problem_statement&pm=10702&rd=14144&rm=303184&cr=22697599)
 * [Test>>>thebest "HarmonicTriples" (in Russian) [difficulty: medium]](http://esci.ru/ttb/statement-62.htm)
-* [SPOJ #4191 MSKYCODE "Sky Code" [difficulty: medium]](http://www.spoj.pl/problems/MSKYCODE/)
-* [SPOJ #4168 SQFREE "Square-free integers" [difficulty: medium]](http://www.spoj.pl/problems/SQFREE/)
+* [SPOJ #4191 MSKYCODE "Sky Code" [difficulty: medium]](http://www.spoj.com/problems/MSKYCODE/)
+* [SPOJ #4168 SQFREE "Square-free integers" [difficulty: medium]](http://www.spoj.com/problems/SQFREE/)
 * [CodeChef "Count Relations" [difficulty: medium]](http://www.codechef.com/JAN11/problems/COUNTREL/)
 * [SPOJ - Almost Prime Numbers Again](http://www.spoj.com/problems/KPRIMESB/)
 * [SPOJ - Find number of Pair of Friends](http://www.spoj.com/problems/IITKWPCH/)
 * [SPOJ - Balanced Cow Subsets](http://www.spoj.com/problems/SUBSET/)
+* [SPOJ - EASY MATH [difficulty: medium]](http://www.spoj.com/problems/EASYMATH/)
+* [SPOJ - MOMOS - FEASTOFPIGS [difficulty: easy]](https://www.spoj.com/problems/MOMOS/)
+* [Atcoder - Grid 2 [difficulty: easy]](https://atcoder.jp/contests/dp/tasks/dp_y/)
